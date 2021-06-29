@@ -12,7 +12,8 @@ import {
 	Query
 } from "@nestjs/common";
 import { AppService } from "./app.service";
-import { Resource } from "./model/resource";
+import { Resource } from './model/resource';
+import { ResourceDto } from './model/resource-dto';
 
 @Controller()
 export class AppController {
@@ -42,20 +43,26 @@ export class AppController {
 	
 	@Get(":id")
 	@HttpCode(HttpStatus.OK)
-	getResourceById(@Param("id", ParseIntPipe) id: number): Promise<Resource> {
+	getResourceById(@Param("id", ParseIntPipe) id: number): Promise<ResourceDto> {
 		return this.appService.getResourceById(id);
+	}
+	
+	@Get('password/:id')
+	@HttpCode(HttpStatus.OK)
+	showResourcePassword(@Param("id", ParseIntPipe) id: number): Promise<string> {
+		return this.appService.showResourcePassword(id);
 	}
 	
 	@Post()
 	@HttpCode(HttpStatus.CREATED)
-	createResource(@Body() resource: Resource): Promise<string> {
-		return this.appService.createResource(resource);
+	createResource(@Body() resourceDto: ResourceDto): Promise<string> {
+		return this.appService.createResource(resourceDto);
 	}
 	
 	@Put()
 	@HttpCode(HttpStatus.OK)
-	updateResource(@Body() resource: Resource): Promise<string> {
-		return this.appService.updateResource(resource);
+	updateResource(@Body() resourceDto: ResourceDto): Promise<string> {
+		return this.appService.updateResource(resourceDto);
 	}
 	
 	@Delete(":id")
