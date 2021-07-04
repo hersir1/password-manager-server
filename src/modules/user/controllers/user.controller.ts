@@ -12,7 +12,6 @@ import {
   Query,
 } from '@nestjs/common';
 import { UserDataSourceService } from '../services/user-data-source.service';
-import { User } from '../models/user';
 import { UserDto } from '../models/user-dto';
 import { UserDtoFront } from '../models/user-dto-front';
 
@@ -39,19 +38,19 @@ export class UserController {
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  addUser(@Body() userDto: UserDto): Promise<string | null> {
+  addUser(@Body() userDto: UserDto): Promise<UserDtoFront | null> {
     return this.userServiceDataSource.addUser(userDto);
   }
 
   @Put()
   @HttpCode(HttpStatus.OK)
-  updateUser(@Body() userDto: UserDto): Promise<string> {
+  updateUser(@Body() userDto: UserDto): Promise<UserDtoFront | null> {
     return this.userServiceDataSource.updateUser(userDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  deleteUser(@Param('id', ParseIntPipe) id: number): Promise<string> {
+  deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.userServiceDataSource.deleteUser(id);
   }
 }

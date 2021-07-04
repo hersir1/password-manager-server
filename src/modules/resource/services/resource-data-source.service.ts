@@ -65,10 +65,10 @@ export class ResourceDataSourceService {
     };
   }
 
-  async addResource(resourceDto: ResourceDto): Promise<string | null> {
+  async addResource(resourceDto: ResourceDto): Promise<boolean | null> {
     let resources: Resource[] = this.resourceService.readResources();
 
-    if (resources.find(elem => elem.name === resourceDto.name)) {
+    if (resources.find(elem => elem.name === resourceDto.name && elem.userId === resourceDto.userId)) {
       return null;
     }
 
@@ -86,13 +86,13 @@ export class ResourceDataSourceService {
     id += 1;
     this.resourceService.writeNextId(id);
 
-    return JSON.stringify('Ресурс успешно добавлен');
+    return true;
   }
 
-  async updateResource(resourceDto: ResourceDto): Promise<string | null> {
+  async updateResource(resourceDto: ResourceDto): Promise<boolean | null> {
     let resources: Resource[] = this.resourceService.readResources();
 
-    if (resources.find(elem => elem.name === resourceDto.name)) {
+    if (resources.find(elem => elem.name === resourceDto.name && elem.userId === resourceDto.userId)) {
       return null;
     }
 
@@ -107,17 +107,17 @@ export class ResourceDataSourceService {
 
     this.resourceService.writeResources(resources);
 
-    return JSON.stringify('Информация успешно обновлена');
+    return true;
   }
 
-  async deleteResource(id: number): Promise<string> {
+  async deleteResource(id: number): Promise<boolean> {
     let resources: Resource[] = this.resourceService.readResources();
 
     resources = resources.filter(elem => elem.id !== id);
 
     this.resourceService.writeResources(resources);
 
-    return JSON.stringify('Ресурс успешно удалён');
+    return true;
   }
 
   async showResourcePassword(id: number): Promise<string> {

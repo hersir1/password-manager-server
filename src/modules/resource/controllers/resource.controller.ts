@@ -57,19 +57,19 @@ export class ResourceController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  createResource(@Body() resourceDto: ResourceDto): Promise<string> {
+  createResource(@Body() resourceDto: ResourceDto): Promise<boolean | null> {
     return this.resourceServiceDataSource.addResource(resourceDto);
   }
 
   @Put()
   @HttpCode(HttpStatus.OK)
-  updateResource(@Body() resourceDto: ResourceDto): Promise<string> {
+  updateResource(@Body() resourceDto: ResourceDto): Promise<boolean | null> {
     return this.resourceServiceDataSource.updateResource(resourceDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  deleteResource(@Param('id', ParseIntPipe) id: number): Promise<string> {
+  deleteResource(@Param('id', ParseIntPipe) id: number): Promise<boolean> {
     return this.resourceServiceDataSource.deleteResource(id);
   }
 }

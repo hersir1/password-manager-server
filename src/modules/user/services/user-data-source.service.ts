@@ -47,7 +47,7 @@ export class UserDataSourceService {
     };
   }
 
-  async addUser(userDto: UserDto): Promise<string | null> {
+  async addUser(userDto: UserDto): Promise<UserDtoFront | null> {
     let users: User[] = this.userService.readUsers();
 
     if (users.find(elem => elem.email === userDto.email)) {
@@ -71,10 +71,14 @@ export class UserDataSourceService {
     id += 1;
     this.userService.writeNextId(id);
 
-    return JSON.stringify('Пользователь успешно добавлен');
+    return {
+      id,
+      login: userDto.login,
+      email: userDto.email
+    };
   }
 
-  async updateUser(userDto: UserDto): Promise<string> {
+  async updateUser(userDto: UserDto): Promise<UserDtoFront | null> {
     let users: User[] = this.userService.readUsers();
 
     if (users.find(elem => elem.email === userDto.email)) {
@@ -95,16 +99,18 @@ export class UserDataSourceService {
 
     this.userService.writeUsers(users);
 
-    return JSON.stringify('Информация успешно обновлена');
+    return {
+      id: userDto.id,
+      login: userDto.login,
+      email: userDto.email
+    };
   }
 
-  async deleteUser(id: number): Promise<string> {
+  async deleteUser(id: number): Promise<void> {
     let users: User[] = this.userService.readUsers();
 
     users = users.filter(elem => elem.id !== id);
 
     this.userService.writeUsers(users);
-
-    return JSON.stringify('Пользователь успешно удалён');
   }
 }
