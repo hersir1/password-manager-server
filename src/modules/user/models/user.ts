@@ -5,6 +5,7 @@ export class User {
   login: string;
   email: string;
   password: Password;
+  lastLogin: Date;
 
   constructor() {
   }

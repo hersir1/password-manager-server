@@ -3,6 +3,7 @@ export class UserDto {
   login: string;
   email: string;
   password: string;
+  lastLogin?: Date;
 
   constructor() {
   }

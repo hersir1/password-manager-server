@@ -23,6 +23,7 @@ export class UserDataSourceService {
       id: user.id,
       login: user.login,
       email: user.email,
+      lastLogin: user.lastLogin,
       password: this.passwordService.decrypt(user.password)
     };
   }
@@ -40,10 +41,13 @@ export class UserDataSourceService {
       return null;
     }
 
+    this.updateLastLogin(user.id);
+
     return {
       id: user.id,
       login: user.login,
-      email: user.email
+      email: user.email,
+      lastLogin: user.lastLogin
     };
   }
 
@@ -63,6 +67,7 @@ export class UserDataSourceService {
       id,
       login: userDto.login,
       email: userDto.email,
+      lastLogin: new Date(),
       password: this.passwordService.encrypt(userDto.password)
     });
 
@@ -74,26 +79,38 @@ export class UserDataSourceService {
     return {
       id,
       login: userDto.login,
-      email: userDto.email
+      email: userDto.email,
+      lastLogin: userDto.lastLogin
     };
   }
 
   async updateUser(userDto: UserDto): Promise<UserDtoFront | null> {
     let users: User[] = this.userService.readUsers();
 
-    if (users.find(elem => elem.email === userDto.email)) {
-      return null;
-    }
-    if (users.find(elem => elem.login === userDto.login)) {
+    const updatedUser = users.find(elem => elem.id === userDto.id);
+
+    console.log(updatedUser.login);
+    console.log(userDto.login);
+    console.log(users.find(elem => elem.email === userDto.email));
+
+    if (users.find(elem => elem.email === userDto.email) && updatedUser.email !== userDto.email) {
       return null;
     }
 
-    users = users.filter(elem => elem.id === userDto.id);
+    console.log(updatedUser.login);
+    console.log(userDto.login);
+    console.log(users.find(elem => elem.login === userDto.login));
+    if (users.find(elem => elem.login === userDto.login) && updatedUser.login !== userDto.login) {
+      return null;
+    }
+
+    users = users.filter(elem => elem.id !== userDto.id);
 
     users.push({
       id: userDto.id,
       login: userDto.login,
       email: userDto.email,
+      lastLogin: updatedUser.lastLogin,
       password: this.passwordService.encrypt(userDto.password)
     });
 
@@ -102,7 +119,8 @@ export class UserDataSourceService {
     return {
       id: userDto.id,
       login: userDto.login,
-      email: userDto.email
+      email: userDto.email,
+      lastLogin: updatedUser.lastLogin
     };
   }
 
@@ -110,6 +128,24 @@ export class UserDataSourceService {
     let users: User[] = this.userService.readUsers();
 
     users = users.filter(elem => elem.id !== id);
+
+    this.userService.writeUsers(users);
+  }
+
+  private updateLastLogin(userId: number): void {
+    let users: User[] = this.userService.readUsers();
+
+    const loginUser = users.find(elem => elem.id === userId);
+
+    users = users.filter(elem => elem.id !== userId);
+
+    users.push({
+      id: loginUser.id,
+      login: loginUser.login,
+      email: loginUser.email,
+      lastLogin: new Date(),
+      password: loginUser.password
+    });
 
     this.userService.writeUsers(users);
   }
