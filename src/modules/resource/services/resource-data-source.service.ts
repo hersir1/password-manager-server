@@ -83,18 +83,14 @@ export class ResourceDataSourceService {
 
     this.resourceService.writeResources(resources);
 
-    id += 1;
-    this.resourceService.writeNextId(id);
+    const nextId = id + 1;
+    this.resourceService.writeNextId(nextId);
 
     return true;
   }
 
   async updateResource(resourceDto: ResourceDto): Promise<boolean | null> {
     let resources: Resource[] = this.resourceService.readResources();
-
-    if (resources.find(elem => elem.name === resourceDto.name && elem.userId === resourceDto.userId)) {
-      return null;
-    }
 
     resources = resources.filter(elem => elem.id !== resourceDto.id);
 
@@ -126,5 +122,15 @@ export class ResourceDataSourceService {
     const resource = resourcesArr.find(elem => elem.id === id);
 
     return JSON.stringify(this.passwordService.decrypt(resource.password));
+  }
+  
+  async deleteAllUserResources(userId: number): Promise<boolean> {
+    let resourcesArr: Resource[] = this.resourceService.readResources();
+    
+    resourcesArr = resourcesArr.filter(elem => elem.userId !== userId);
+    
+    this.resourceService.writeResources(resourcesArr);
+    
+    return true;
   }
 }

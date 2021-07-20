@@ -73,8 +73,8 @@ export class UserDataSourceService {
 
     this.userService.writeUsers(users);
 
-    id += 1;
-    this.userService.writeNextId(id);
+    const nextId = id + 1;
+    this.userService.writeNextId(nextId);
 
     return {
       id,
@@ -89,17 +89,10 @@ export class UserDataSourceService {
 
     const updatedUser = users.find(elem => elem.id === userDto.id);
 
-    console.log(updatedUser.login);
-    console.log(userDto.login);
-    console.log(users.find(elem => elem.email === userDto.email));
-
     if (users.find(elem => elem.email === userDto.email) && updatedUser.email !== userDto.email) {
       return null;
     }
-
-    console.log(updatedUser.login);
-    console.log(userDto.login);
-    console.log(users.find(elem => elem.login === userDto.login));
+    
     if (users.find(elem => elem.login === userDto.login) && updatedUser.login !== userDto.login) {
       return null;
     }
