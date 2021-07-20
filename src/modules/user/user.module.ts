@@ -3,10 +3,16 @@ import { UserController } from './controllers/user.controller';
 import { UserDataSourceService } from './services/user-data-source.service';
 import { PasswordService } from '../../services/password.service';
 import { UserService } from './services/user.service';
+import { SupportService } from '../../services/support.service';
 
 @Module({
   controllers: [UserController],
-  providers: [UserDataSourceService, UserService, PasswordService],
+  providers: [
+    UserDataSourceService,
+    UserService,
+    PasswordService,
+    SupportService
+  ],
 })
 export class UserModule {
 }
